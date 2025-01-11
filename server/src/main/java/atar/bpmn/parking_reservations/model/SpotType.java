@@ -1,4 +1,4 @@
-package atar.bpmn.bpmn.model;
+package atar.bpmn.parking_reservations.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;

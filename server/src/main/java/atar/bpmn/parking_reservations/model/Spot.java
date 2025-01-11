@@ -1,4 +1,4 @@
-package atar.bpmn.bpmn.model;
+package atar.bpmn.parking_reservations.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,4 +25,5 @@ public class Spot {
     @ManyToOne
     @JoinColumn(name = "spot_type_id", nullable = false)
     private SpotType spotType;
+
 }

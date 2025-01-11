@@ -1,10 +1,10 @@
-package atar.bpmn.bpmn;
+package atar.bpmn.parking_reservations;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BpmnApplicationTests {
+class BpmnParkingReservationsApplicationTests {
 
 	@Test
 	void contextLoads() {
