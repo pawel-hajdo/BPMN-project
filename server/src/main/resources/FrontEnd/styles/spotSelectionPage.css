@@ -1,0 +1,127 @@
+/* Reset stylów */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+
+#navbar {
+    width: 100%;
+    background-color: #3b5998;
+    height: 8vh;
+    display: flex;
+    align-items: center;
+    padding-left: 5vw;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#logoName {
+    font-size: 2rem;
+    color: white;
+    font-weight: bold;
+}
+
+
+#mainContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5vh;
+}
+
+#SpotSelection {
+    width: 90%;
+    max-width: 600px;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+ label {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+    color: #555;
+}
+
+ input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+#SpotSelectionForm input:focus {
+    border-color: #3b5998;
+}
+
+button {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #3b5998;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #334f7b;
+}
+
+
+.title {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#PaymentSection {
+    width: 80%;
+    background-color: white;
+    padding: 5vh;
+    border-radius: 10px;
+    margin-top: 5vh;
+}
+
+button {
+    background-color: cornflowerblue;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: royalblue;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: space-between;
+}
