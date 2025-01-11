@@ -4,12 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const addressList = document.getElementById("addressList");
     const parkingSpotList = document.getElementById("parkingSpotList");
 
-    // Fetch the parking data from your API
     fetch('http://localhost:8080/api/parkings')
-        .then(response => response.json()) // Parse the response as JSON
+        .then(response => response.json())
         .then(apiResponse => {
+            console.log(apiResponse)
 
-            // Transform the API response to the required format
             const transformedData = apiResponse.flatMap(parking =>
                 parking.spots.map(spot => ({
                     city: parking.city,
@@ -18,8 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     spot: spot.spaceCode
                 }))
             );
-
-            // Add options to list function
             function addOptionsToList(listElement, options) {
                 listElement.innerHTML = '';
                 options.forEach(option => {
@@ -29,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             }
 
-            // Populate the city list
             const cities = [...new Set(transformedData.map(entry => entry.city))];
             addOptionsToList(cityList, cities);
 
@@ -39,12 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const streets = [...new Set(transformedData.filter(entry => entry.city === selectedCity).map(entry => entry.street))];
                 addOptionsToList(streetList, streets);
 
-                // Reset address and parking spot lists
                 addressList.innerHTML = '';
                 parkingSpotList.innerHTML = '';
             });
 
-            // Handle street input change
             document.getElementById("street").addEventListener("input", function () {
                 const selectedStreet = this.value;
                 const selectedCity = document.getElementById("city").value;
@@ -52,11 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 const addresses = [...new Set(transformedData.filter(entry => entry.city === selectedCity && entry.street === selectedStreet).map(entry => entry.address))];
                 addOptionsToList(addressList, addresses);
 
-                // Reset parking spot list
                 parkingSpotList.innerHTML = '';
             });
 
-            // Handle address input change
             document.getElementById("address").addEventListener("input", function () {
                 const selectedAddress = this.value;
                 const selectedCity = document.getElementById("city").value;
