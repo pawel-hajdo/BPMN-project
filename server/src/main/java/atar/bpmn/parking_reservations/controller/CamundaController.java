@@ -9,12 +9,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import atar.bpmn.parking_reservations.DTO.PaymentBodyTemplate;
+
+import java.time.Duration;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
 public class CamundaController {
     private static final String BPMN_PROCESS_ID = "reservation_process";
+    private static final String PAYMENT_MESSAGE_ID = "payment_message";
 
     @Value("${zeebe.client.cloud.clusterId}")
     private String clusterId;
@@ -52,5 +57,28 @@ public class CamundaController {
 
         variables.put("processInstanceKey", event.join().getProcessInstanceKey());
         return variables;
+    }
+
+    @PostMapping("/payment")
+    public String postMethodName(@RequestBody PaymentBodyTemplate paymentData) {
+
+        Map<String, Object> vars = new HashMap<>();
+
+        vars.put("cardNumber", paymentData.card().getNumber());
+        vars.put("cardCvc", paymentData.card().getCvc());
+        vars.put("cardName", paymentData.card().getName());
+        vars.put("cardExpire", paymentData.card().getExpire());
+        vars.put("reservationId", paymentData.reservationId());
+        
+        client
+            .newPublishMessageCommand()
+            .messageName(PAYMENT_MESSAGE_ID)
+            .correlationKey(paymentData.reservationId().toString())
+            .timeToLive(Duration.ofMinutes(30))
+            .variables(vars)
+            .send()
+            .join();
+        
+        return "OK";
     }
 }

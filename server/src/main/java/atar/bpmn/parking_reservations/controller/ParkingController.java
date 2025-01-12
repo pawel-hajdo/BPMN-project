@@ -1,6 +1,7 @@
 package atar.bpmn.parking_reservations.controller;
 
 import atar.bpmn.parking_reservations.DTO.ParkingWithSpotsResponse;
+import atar.bpmn.parking_reservations.DTO.PaymentBodyTemplate;
 import atar.bpmn.parking_reservations.DTO.ReservationRequest;
 import atar.bpmn.parking_reservations.DTO.ReservationResponse;
 import atar.bpmn.parking_reservations.service.EmitterService;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping(path = "/api")
@@ -31,7 +35,7 @@ public class ParkingController {
     public ResponseEntity<List<ParkingWithSpotsResponse>> getAllParkings() {
         List<ParkingWithSpotsResponse> parkingList = parkingService.findAllParkings();
         return ResponseEntity.ok(parkingList);
-    }
+    }    
 
     @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter subscribe(@RequestParam String processInstanceKey) {
