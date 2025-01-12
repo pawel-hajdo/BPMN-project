@@ -37,10 +37,6 @@ public class ReservationWorker {
         boolean isFree = reservationService.checkIfSpotAvailable(id, start, end);
         jobResultVariables.put("isFree",isFree);
 
-        JSONObject eventMessage = new JSONObject();
-        eventMessage.put("isSpaceAvaliable", isFree);
-        emitterService.sendMessageToListener(String.valueOf(job.getProcessInstanceKey()), eventMessage);   
-
         return jobResultVariables;
     }
 
@@ -50,8 +46,28 @@ public class ReservationWorker {
 
         System.out.println("send_no_space_message");
 
+        boolean isFree = (boolean) jobResultVariables.get("isFree");
+
+        JSONObject eventMessage = new JSONObject();
+        eventMessage.put("isSpaceAvaliable", isFree);
+        emitterService.sendMessageToListener(String.valueOf(job.getProcessInstanceKey()), eventMessage);   
+
         return jobResultVariables;
     }
+
+    @JobWorker(type = "send_spot_avaliable_message")
+    public Map<String, Object> sendSpotAvaliableMessage(final JobClient client, final ActivatedJob job) {
+        var jobResultVariables = job.getVariablesAsMap();
+
+        System.out.println("send_no_space_message");
+        boolean isFree = (boolean) jobResultVariables.get("isFree");
+
+        JSONObject eventMessage = new JSONObject();
+        eventMessage.put("isSpaceAvaliable", isFree);
+        emitterService.sendMessageToListener(String.valueOf(job.getProcessInstanceKey()), eventMessage);   
+
+        return jobResultVariables;
+    }    
 
     @JobWorker(type = "prepare_price")
     public Map<String, Object> preparePrice(final JobClient client, final ActivatedJob job) {
@@ -64,6 +80,10 @@ public class ReservationWorker {
         LocalDateTime endTime = LocalDateTime.parse(jobResultVariables.get("endTime").toString());
 
         Map<String, Object> costResult = reservationService.calculateTotalCost(startTime, endTime);
+
+        JSONObject eventMessage = new JSONObject(costResult);
+        emitterService.sendMessageToListener(String.valueOf(job.getProcessInstanceKey()), eventMessage);
+
         jobResultVariables.putAll(costResult);
         return jobResultVariables;
     }
@@ -87,6 +107,11 @@ public class ReservationWorker {
         priceRate.setId(((Number) ((Map<String, Object>) jobResultVariables.get("priceRate")).get("id")).longValue());
 
         Long reservationId = reservationService.createReservation(spotId, startTime, endTime, priceRate);
+
+        JSONObject eventMessage = new JSONObject();
+        eventMessage.put("reservationId", reservationId);
+        emitterService.sendMessageToListener(String.valueOf(job.getProcessInstanceKey()), eventMessage);
+
         jobResultVariables.put("reservationId", reservationId);
         return jobResultVariables;
     }
