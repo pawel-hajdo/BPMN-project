@@ -14,10 +14,12 @@ RAISE NOTICE 'CLEAR ALL DATA';
 DELETE FROM bpmn.spot;
 DELETE FROM bpmn.parking;
 DELETE FROM bpmn.spot_type;
+DELETE FROM bpmn.price_rate;
 
 ALTER SEQUENCE bpmn.parking_id_seq RESTART WITH 1;
 ALTER SEQUENCE bpmn.spot_id_seq RESTART WITH 1;
 ALTER SEQUENCE bpmn.spot_type_id_seq RESTART WITH 1;
+ALTER SEQUENCE bpmn.price_rate_id_seq RESTART WITH 1;
 
 INSERT INTO bpmn.spot_type (type_name) VALUES ('Car');
 
