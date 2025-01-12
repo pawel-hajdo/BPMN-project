@@ -33,13 +33,6 @@ public class ParkingController {
         return ResponseEntity.ok(parkingList);
     }
 
-    @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest request) {
-        ReservationResponse response = reservationService.createReservation(request.spotId(), request.startTime(), request.endTime());
-
-        return ResponseEntity.ok(response);
-    }
-
     @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter subscribe(@RequestParam String processInstanceKey) {
         return emitterService.addListener(processInstanceKey);
