@@ -8,11 +8,15 @@ public class PyamentService {
     private Map<Card, Integer> cards;
 
     public boolean validateCardData(Card cardData) {
-        return false;
+        return true;
     }
 
     public Integer makePayment(Card cardData, Integer payment) throws Exception {
         Integer money = cards.get(cardData);
+
+        if(money == null) {
+            throw new Exception("Not enough money");
+        }
         money -= payment;
 
         if(money < 0) {
