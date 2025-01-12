@@ -39,7 +39,7 @@ public class ReservationWorker {
 
         JSONObject eventMessage = new JSONObject();
         eventMessage.put("isSpaceAvaliable", isFree);
-        emitterService.sendMessageToListener(job.getBpmnProcessId(), eventMessage);   
+        emitterService.sendMessageToListener(String.valueOf(job.getProcessInstanceKey()), eventMessage);   
 
         return jobResultVariables;
     }
