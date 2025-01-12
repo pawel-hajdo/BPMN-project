@@ -131,8 +131,7 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
     console.log("Form submitted: Spot Selection");
 
 
-    const spotSelectionForm = document.getElementById("SpotSelection");
-    const paymentForm = document.getElementById("PaymentSection");
+
     const timeS = document.getElementById("reservationStartInput").value;
     const timeE = document.getElementById("reservationEndInput").value;
 
@@ -150,7 +149,6 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
 
     console.log("Navigated to Payment Form");
     console.log(matchedSpot.spotID+ "id");
-    console
     console.log(timeSConverted+ "start");
     console.log(timeEConverted+ "end");
 
@@ -183,12 +181,19 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
                 eventSource.onmessage = async function (event) {
                     try {
                         console.log("Camunda response: ", event.data);
-
-                        // Parse and process the event data here
                         const data = JSON.parse(event.data);
                         console.log("Parsed data: ", data);
+                        if (data.hasOwnProperty('isSpaceAvaliable')){
+                            if (data.isSpaceAvaliable===true)
+                            {
+                                const goPaymentButton=document.getElementById('goToPaymentButton').style.display='block'
+                            }
+                            else {
+                                alert("this spot is already taken on this time, select another one")
+                                const goPaymentButton=document.getElementById('goToPaymentButton').style.display='none'
+                            }
 
-                        // Add your logic to handle the message
+                        }
                     } catch (error) {
                         console.error("Error in onmessage handler: ", error);
                     }
@@ -199,8 +204,8 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
                 }
 
                 SetPayment();
-                spotSelectionForm.style.display = "none";
-                paymentForm.style.display = "block";
+                //spotSelectionForm.style.display = "none";
+                //paymentForm.style.display = "block";
             })
             .catch(error => {
                 console.error('Error during reservation:', error);
@@ -211,7 +216,13 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
 
 });
 
-
+document.getElementById("goToPaymentButton").addEventListener("submit", function (event) {
+    event.preventDefault();
+    const spotSelectionForm = document.getElementById("SpotSelection");
+    const paymentForm = document.getElementById("PaymentSection");
+    spotSelectionForm.style.display = "none";
+    paymentForm.style.display = "block";
+})
 
 document.getElementById("PaymentForm").addEventListener("submit", function (event) {
     event.preventDefault();

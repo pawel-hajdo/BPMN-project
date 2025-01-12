@@ -45,7 +45,8 @@
 
             <label for="reservationEndInput" id="reservationEnd">Koniec rezerwacji</label>
             <input type="datetime-local" id="reservationEndInput" name="expiryDate" required>
-            <button type="submit" id="submitSpotSelection">Zarezerwuj i przejdź do płatności</button>
+            <button type="submit" id="submitSpotSelection">Check Availability</button>
+            <button type="submit" id="goToPaymentButton" style="display: none">goToPayment</button>
         </form>
     </div>
     <div id="PaymentSection" class="formContainer" style="display: none">
