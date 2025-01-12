@@ -14,7 +14,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("""
     SELECT r 
     FROM Reservation r
-    WHERE r.spot = :spotId 
+    WHERE r.spot.id = :spotId 
       AND r.startTime < :endTime 
       AND r.endTime > :startTime
     """)
