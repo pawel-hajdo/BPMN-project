@@ -172,10 +172,10 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
         })
             .then(data => {
                 console.log('Reservation successful:', data);
-                cost=data.totalCost;
-                reservationId=data.reservationId;
+              //  cost=data.totalCost;
+               // reservationId=data.reservationId;
                 procesInstanceId=data.processInstanceKey;
-                console.log('data  recieved:', cost+', '+procesInstanceId);
+                console.log('data  recieved:'+procesInstanceId);
                 eventSource= new EventSource(`http://localhost:8080/api/subscribe?processInstanceKey=${procesInstanceId}`);
 
                 eventSource.onmessage = async function (event) {
@@ -198,14 +198,10 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
                         console.error("Error in onmessage handler: ", error);
                     }
                 };
-
                 function SetPayment() {
                     document.getElementById("price").innerHTML=cost/100;
                 }
-
                 SetPayment();
-                //spotSelectionForm.style.display = "none";
-                //paymentForm.style.display = "block";
             })
             .catch(error => {
                 console.error('Error during reservation:', error);
@@ -215,7 +211,6 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
     SendReservation(timeS,timeE,matchedSpot.spotID)
 
 });
-
 document.getElementById("goToPaymentButton").addEventListener("submit", function (event) {
     event.preventDefault();
     const spotSelectionForm = document.getElementById("SpotSelection");
@@ -223,7 +218,6 @@ document.getElementById("goToPaymentButton").addEventListener("submit", function
     spotSelectionForm.style.display = "none";
     paymentForm.style.display = "block";
 })
-
 document.getElementById("PaymentForm").addEventListener("submit", function (event) {
     event.preventDefault();
     const validBankingData = [
