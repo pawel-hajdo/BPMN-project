@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const addressInput = document.getElementById("address");
     const parkingSpotInput = document.getElementById("parkingSpot");
 
-    // Initially hide dependent inputs
+
     streetInput.parentElement.style.display = "none";
     addressInput.parentElement.style.display = "none";
     parkingSpotInput.parentElement.style.display = "none";
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(apiResponse => {
             console.log(apiResponse);
 
-            // Transform data for easier usage
+
             const transformedData = apiResponse.flatMap(parking =>
                 parking.spots.map(spot => ({
                     city: parking.city,
@@ -51,12 +51,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     const streets = [...new Set(transformedData.filter(entry => entry.city === selectedCity).map(entry => entry.street))];
                     addOptionsToList(streetList, streets);
 
-                    // Show street input and reset below inputs
+
                     streetInput.parentElement.style.display = "block";
                     addressInput.parentElement.style.display = "none";
                     parkingSpotInput.parentElement.style.display = "none";
                 } else {
-                    // Hide all dependent inputs
+
                     streetInput.parentElement.style.display = "none";
                     addressInput.parentElement.style.display = "none";
                     parkingSpotInput.parentElement.style.display = "none";
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const addresses = [...new Set(transformedData.filter(entry => entry.city === selectedCity && entry.street === selectedStreet).map(entry => entry.address))];
                     addOptionsToList(addressList, addresses);
 
-                    // Show address input and reset parking spot input
+
                     addressInput.parentElement.style.display = "block";
                     parkingSpotInput.parentElement.style.display = "none";
                 } else {
@@ -90,10 +90,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     const parkingSpots = [...new Set(transformedData.filter(entry => entry.city === selectedCity && entry.street === selectedStreet && entry.address === selectedAddress).map(entry => entry.spot))];
                     addOptionsToList(parkingSpotList, parkingSpots);
 
-                    // Show parking spot input
+
                     parkingSpotInput.parentElement.style.display = "block";
                 } else {
-                    // Hide parking spot input
+
                     parkingSpotInput.parentElement.style.display = "none";
                 }
             });
@@ -175,6 +175,7 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
                 paymentForm.style.display = "block";
                 cost=data.totalCost;
                 reservationId=data.reservationId;
+                let eventSourceID=data.eventSourceId;
                 console.log('data  recieved:', cost+', '+reservationId);
 
                 function SetPayment() {
@@ -193,7 +194,7 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
 });
 
 document.getElementById("PaymentForm").addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent form submission
+    event.preventDefault();
     const validBankingData = [
         {
             name: "Piotr",
