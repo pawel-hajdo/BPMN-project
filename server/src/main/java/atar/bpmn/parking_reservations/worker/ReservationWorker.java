@@ -9,16 +9,19 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import atar.bpmn.parking_reservations.service.EmitterService;
 import atar.bpmn.parking_reservations.service.ReservationService;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import org.json.JSONObject;
 
 @Component
 @AllArgsConstructor
 public class ReservationWorker {
 
     private final ReservationService reservationService;
+    private final EmitterService emitterService;
 
     @JobWorker(type = "check_for_spot")
     public Map<String, Object> checkForSpot(final JobClient client, final ActivatedJob job) {
@@ -33,6 +36,10 @@ public class ReservationWorker {
 
         boolean isFree = reservationService.checkIfSpotAvailable(id, start, end);
         jobResultVariables.put("isFree",isFree);
+
+        JSONObject eventMessage = new JSONObject();
+        eventMessage.put("isSpaceAvaliable", isFree);
+        emitterService.sendMessageToListener(job.getBpmnProcessId(), eventMessage);   
 
         return jobResultVariables;
     }
