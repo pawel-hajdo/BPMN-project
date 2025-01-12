@@ -16,28 +16,29 @@
         <h2 class="title">Wybierz Miejsce Parkingowe</h2>
         <form id="SpotSelectionForm">
             <!-- Miasto -->
-            <label for="city">Miasto:</label>
-            <input list="cityList" id="city" name="city" placeholder="Wybierz miasto" required="required">
-            <datalist id="cityList">
-            </datalist>
+            <div>
+                <label for="city">City:</label>
+                <input list="cityList" id="city" name="city" placeholder="Select a city">
+                <datalist id="cityList"></datalist>
+            </div>
 
-            <!-- Ulica -->
-            <label for="street">Ulica:</label>
-            <input list="streetList" id="street" name="street" placeholder="Wybierz ulicę"  required="required">
-            <datalist id="streetList">
-            </datalist>
+            <div>
+                <label for="street">Street:</label>
+                <input list="streetList" id="street" name="street" placeholder="Select a street">
+                <datalist id="streetList"></datalist>
+            </div>
 
-            <!-- Adres -->
-            <label for="address">Adres:</label>
-            <input list="addressList" id="address" name="address" placeholder="Wybierz adres"  required="required">
-            <datalist id="addressList">
-            </datalist>
+            <div>
+                <label for="address">Address:</label>
+                <input list="addressList" id="address" name="address" placeholder="Select an address">
+                <datalist id="addressList"></datalist>
+            </div>
 
-            <!-- Miejsce Parkingowe -->
-            <label for="parkingSpot">Miejsce Parkingowe:</label>
-            <input list="parkingSpotList" id="parkingSpot" name="parkingSpot" placeholder="Wybierz miejsce"  required="required">
-            <datalist id="parkingSpotList">
-            </datalist>
+            <div>
+                <label for="parkingSpot">Parking Spot:</label>
+                <input list="parkingSpotList" id="parkingSpot" name="parkingSpot" placeholder="Select a spot">
+                <datalist id="parkingSpotList"></datalist>
+            </div>
 
             <label for="reservationStartInput" id="reservationStart">Początek rezerwacji</label>
             <input type="datetime-local" id="reservationStartInput" name="expiryDate" required>
