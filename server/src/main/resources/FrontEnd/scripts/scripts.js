@@ -1,6 +1,8 @@
 let matchedSpot=0;
 let cost=0;
-let reservationId=0
+let reservationId=0;
+let procesInstanceId;
+let eventSource;
 document.addEventListener("DOMContentLoaded", () => {
     const cityList = document.getElementById("cityList");
     const streetList = document.getElementById("streetList");
@@ -159,7 +161,7 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
         })
         console.log(body)
 
-        fetch('http://localhost:8080/api/reservations',{
+        fetch('http://localhost:8080/api/start',{
             method:'POST',
             headers:{'Content-Type': 'application/json'},
             body:body
@@ -171,18 +173,19 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
         })
             .then(data => {
                 console.log('Reservation successful:', data);
-                spotSelectionForm.style.display = "none";
-                paymentForm.style.display = "block";
                 cost=data.totalCost;
                 reservationId=data.reservationId;
-                let eventSourceID=data.eventSourceId;
-                console.log('data  recieved:', cost+', '+reservationId);
+                procesInstanceId=data.processInstanceKey;
+                console.log('data  recieved:', cost+', '+procesInstanceId);
+                eventSource= new EventSource(`http://localhost:8080/api/subscribe?processInstanceKey=${procesInstanceId}`);
 
                 function SetPayment() {
                     document.getElementById("price").innerHTML=cost/100;
                 }
 
                 SetPayment();
+                spotSelectionForm.style.display = "none";
+                paymentForm.style.display = "block";
             })
             .catch(error => {
                 console.error('Error during reservation:', error);
@@ -192,6 +195,10 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
     SendReservation(timeS,timeE,matchedSpot.spotID)
 
 });
+
+eventSource.onmessage=async function(event){
+    console.log("camunda response"+event.data)
+}
 
 document.getElementById("PaymentForm").addEventListener("submit", function (event) {
     event.preventDefault();
