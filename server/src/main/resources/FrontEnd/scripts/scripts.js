@@ -1,4 +1,6 @@
 let matchedSpot=0;
+let cost=0;
+let reservationId=0
 document.addEventListener("DOMContentLoaded", () => {
     const cityList = document.getElementById("cityList");
     const streetList = document.getElementById("streetList");
@@ -143,11 +145,104 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
         return
     }
 
-    spotSelectionForm.style.display = "none";
-    paymentForm.style.display = "block";
 
     console.log("Navigated to Payment Form");
     console.log(matchedSpot.spotID+ "id");
     console.log(timeSConverted+ "start");
     console.log(timeEConverted+ "end");
+
+    function SendReservation(start,stop,SpotID) {
+        const body=JSON.stringify({
+            spotId:SpotID,
+            startTime: new Date(timeS).toISOString(),
+            endTime: new Date(timeE).toISOString(),
+        })
+        console.log(body)
+
+        fetch('http://localhost:8080/api/reservations',{
+            method:'POST',
+            headers:{'Content-Type': 'application/json'},
+            body:body
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to make reservation: ' + response.statusText);
+            }
+            return response.json();
+        })
+            .then(data => {
+                console.log('Reservation successful:', data);
+                spotSelectionForm.style.display = "none";
+                paymentForm.style.display = "block";
+                cost=data.totalCost;
+                reservationId=data.reservationId;
+                console.log('data  recieved:', cost+', '+reservationId);
+
+                function SetPayment() {
+                    document.getElementById("price").innerHTML=cost/100;
+                }
+
+                SetPayment();
+            })
+            .catch(error => {
+                console.error('Error during reservation:', error);
+                //dubluje inie z response!=200 pewnie do wywalenia
+            });
+    }
+    SendReservation(timeS,timeE,matchedSpot.spotID)
+
+});
+
+document.getElementById("PaymentForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent form submission
+    const validBankingData = [
+        {
+            name: "Piotr",
+            surname: "Dawid",
+            cardNumber: "1231232132132131",
+            cvv: "123",
+            expireDate: "2025-02",
+        },
+        {
+            name: "Anna",
+            surname: "Kowalska",
+            cardNumber: "9876543210987654",
+            cvv: "456",
+            expireDate: "2026-05",
+        },
+        {
+            name: "John",
+            surname: "Doe",
+            cardNumber: "1111222233334444",
+            cvv: "789",
+            expireDate: "2024-12",
+        },
+    ];
+    console.log('abc test');
+
+    const name = document.getElementById('firstName').value;
+    const surname = document.getElementById('lastName').value;
+    const cardNumber = document.getElementById('cardNumber').value;
+    const cvv = document.getElementById('cvv').value;
+    const expireDate = document.getElementById('expiryDate').value;
+    const mail= document.getElementById("email").value;
+
+    console.log(`Name: ${name}\nSurname: ${surname}\nCard Number: ${cardNumber}\nCVV: ${cvv}\nExpire Date: ${expireDate}\nEmail: ${mail}`);
+
+    const isPaymentValid = validBankingData.some(entry =>
+        entry.name === name &&
+        entry.surname === surname &&
+        entry.cardNumber === cardNumber &&
+        entry.cvv === cvv &&
+        entry.expireDate === expireDate
+    );
+
+    if (isPaymentValid) {
+        console.log("Payment successful!");
+        alert("Payment processed successfully!");
+        window.location.href = "html-templates/success-popup.html";
+
+    } else {
+        console.error("Payment failed! Invalid details.");
+        alert("Payment failed! Please check your details and try again.");
+    }
 });
