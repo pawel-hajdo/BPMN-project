@@ -179,6 +179,20 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
                 console.log('data  recieved:', cost+', '+procesInstanceId);
                 eventSource= new EventSource(`http://localhost:8080/api/subscribe?processInstanceKey=${procesInstanceId}`);
 
+                eventSource.onmessage = async function (event) {
+                    try {
+                        console.log("Camunda response: ", event.data);
+
+                        // Parse and process the event data here
+                        const data = JSON.parse(event.data);
+                        console.log("Parsed data: ", data);
+
+                        // Add your logic to handle the message
+                    } catch (error) {
+                        console.error("Error in onmessage handler: ", error);
+                    }
+                };
+
                 function SetPayment() {
                     document.getElementById("price").innerHTML=cost/100;
                 }
@@ -196,9 +210,7 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
 
 });
 
-eventSource.onmessage=async function(event){
-    console.log("camunda response"+event.data)
-}
+
 
 document.getElementById("PaymentForm").addEventListener("submit", function (event) {
     event.preventDefault();
