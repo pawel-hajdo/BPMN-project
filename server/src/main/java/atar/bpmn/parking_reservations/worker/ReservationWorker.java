@@ -55,7 +55,7 @@ public class ReservationWorker {
         return jobResultVariables;
     }
 
-    @JobWorker(type = "send_spot_avaliable_message")
+    @JobWorker(type = "send_spot_avaliavle_message")
     public Map<String, Object> sendSpotAvaliableMessage(final JobClient client, final ActivatedJob job) {
         var jobResultVariables = job.getVariablesAsMap();
 

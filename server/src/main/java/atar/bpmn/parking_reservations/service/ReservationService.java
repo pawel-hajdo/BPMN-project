@@ -45,8 +45,8 @@ public class ReservationService {
         Spot spot = spotRepository.findById(spotId)
                 .orElseThrow(() -> new IllegalArgumentException("Spot not found"));
 
-        boolean spotAlreadyReserved = reservationRepository.existsBySpotIdAndStatus(spotId, ReservationStatus.PENDING);
-        if (spotAlreadyReserved) {
+        boolean isSpotFree = checkIfSpotAvailable(spotId, startTime, endTime);
+        if (!isSpotFree) {
             throw new IllegalStateException("Spot is already reserved.");
         }
 
