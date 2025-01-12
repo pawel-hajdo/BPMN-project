@@ -22,7 +22,7 @@ public class Reservation {
     private Spot spot;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_id", nullable = false)
+    @JoinColumn(name = "payment_id")
     private Payment payment;
 
     @ManyToOne
@@ -37,4 +37,8 @@ public class Reservation {
 
     @Column(name = "access_code")
     private String accessCode;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status;
 }
