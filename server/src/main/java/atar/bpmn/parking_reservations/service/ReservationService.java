@@ -28,6 +28,13 @@ public class ReservationService {
         this.priceRateRepository = priceRateRepository;
     }
 
+    public boolean checkIfSpotAvaliable(Long spotId, LocalDateTime startTime, LocalDateTime enDateTime) {
+        List<Reservation> overlappingReservations = reservationRepository.findReservationsBetweenDates(spotId, startTime, enDateTime);
+        System.out.println(overlappingReservations);
+
+        return overlappingReservations.isEmpty();
+    }
+
     @Transactional
     public ReservationResponse createReservation(Long spotId, LocalDateTime startTime, LocalDateTime endTime) {
         if (startTime.isAfter(endTime)) {

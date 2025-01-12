@@ -4,13 +4,20 @@ import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.worker.JobClient;
 import io.camunda.zeebe.spring.client.annotation.JobWorker;
 import lombok.AllArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import atar.bpmn.parking_reservations.service.ReservationService;
+
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Component
 @AllArgsConstructor
 public class ReservationWorker {
+
+    private final ReservationService reservationService;
 
     @JobWorker(type = "check_for_spot")
     public Map<String, Object> checkForSpot(final JobClient client, final ActivatedJob job) {
@@ -18,6 +25,14 @@ public class ReservationWorker {
 
         System.out.println("check for spot");
         System.out.println(jobResultVariables);
+
+        Long id = new Long((Integer)jobResultVariables.get("spotId"));
+        LocalDateTime start = LocalDateTime.parse(jobResultVariables.get("startTime").toString());
+        LocalDateTime end = LocalDateTime.parse(jobResultVariables.get("endTime").toString());
+
+        boolean isFree = reservationService.checkIfSpotAvaliable(null, start, end);
+        jobResultVariables.put("isFree",isFree);
+
         return jobResultVariables;
     }
 
