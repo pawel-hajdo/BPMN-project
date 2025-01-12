@@ -150,16 +150,17 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
 
     console.log("Navigated to Payment Form");
     console.log(matchedSpot.spotID+ "id");
+    console
     console.log(timeSConverted+ "start");
     console.log(timeEConverted+ "end");
 
     function SendReservation(start,stop,SpotID) {
         const body=JSON.stringify({
             spotId:SpotID,
-            startTime: new Date(timeS).toISOString(),
-            endTime: new Date(timeE).toISOString(),
+            startTime:timeS,
+            endTime:timeE,
         })
-        console.log(body)
+        console.log("test formatu"+body)
 
         fetch('http://localhost:8080/api/start',{
             method:'POST',
