@@ -3,6 +3,8 @@ package atar.bpmn.parking_reservations.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,11 +24,11 @@ public class EmitterServiceImpl implements EmitterService {
         return emitter;
     }
 
-    public void sendMessageToListener(String listenerId, String message) {
+    public void sendMessageToListener(String listenerId, JSONObject message) {
         SseEmitter emitter = listeners.get(listenerId);
         if (emitter != null) {
             try {
-                emitter.send(SseEmitter.event().data(message));
+                emitter.send(SseEmitter.event().data(message.toString()));
             } catch (IOException e) {
                 listeners.remove(listenerId);
             }

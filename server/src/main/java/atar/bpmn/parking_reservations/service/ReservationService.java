@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ReservationService {
@@ -28,15 +30,14 @@ public class ReservationService {
         this.priceRateRepository = priceRateRepository;
     }
 
-    public boolean checkIfSpotAvaliable(Long spotId, LocalDateTime startTime, LocalDateTime enDateTime) {
+    public boolean checkIfSpotAvailable(Long spotId, LocalDateTime startTime, LocalDateTime enDateTime) {
         List<Reservation> overlappingReservations = reservationRepository.findReservationsBetweenDates(spotId, startTime, enDateTime);
         System.out.println(overlappingReservations);
 
         return overlappingReservations.isEmpty();
     }
 
-    @Transactional
-    public ReservationResponse createReservation(Long spotId, LocalDateTime startTime, LocalDateTime endTime) {
+    public Long createReservation(Long spotId, LocalDateTime startTime, LocalDateTime endTime, PriceRate applicableRate){
         if (startTime.isAfter(endTime)) {
             throw new IllegalArgumentException("Start time must be before end time");
         }
@@ -44,8 +45,24 @@ public class ReservationService {
         Spot spot = spotRepository.findById(spotId)
                 .orElseThrow(() -> new IllegalArgumentException("Spot not found"));
 
+        boolean spotAlreadyReserved = reservationRepository.existsBySpotIdAndStatus(spotId, ReservationStatus.PENDING);
+        if (spotAlreadyReserved) {
+            throw new IllegalStateException("Spot is already reserved.");
+        }
 
-        System.out.println(startTime+" " +" "+ endTime);
+        Reservation reservation = new Reservation();
+        reservation.setSpot(spot);
+        reservation.setStartTime(startTime);
+        reservation.setEndTime(endTime);
+        reservation.setPriceRate(applicableRate);
+        reservation.setStatus(ReservationStatus.PENDING);
+
+        reservationRepository.save(reservation);
+
+        return reservation.getId();
+    }
+
+    public Map<String, Object> calculateTotalCost(LocalDateTime startTime, LocalDateTime endTime) {
         long hours = Duration.between(startTime, endTime).toMinutes() / 60;
         if (Duration.between(startTime, endTime).toMinutes() % 60 != 0) {
             hours++;
@@ -57,19 +74,13 @@ public class ReservationService {
 
         List<PriceRate> priceRates = priceRateRepository.findAll();
         PriceRate applicableRate = findApplicableRate(priceRates, hours);
+        Long totalCost = hours * applicableRate.getCostPerStandardHour();
 
-        long totalCost = hours * applicableRate.getCostPerStandardHour();
+        Map<String, Object> result = new HashMap<>();
+        result.put("priceRate", applicableRate);
+        result.put("totalCost", totalCost);
 
-        Reservation reservation = new Reservation();
-        reservation.setSpot(spot);
-        reservation.setStartTime(startTime);
-        reservation.setEndTime(endTime);
-        reservation.setPriceRate(applicableRate);
-        reservation.setStatus(ReservationStatus.PENDING);
-
-        reservationRepository.save(reservation);
-
-        return new ReservationResponse(reservation.getId(), totalCost);
+        return result;
     }
 
     private PriceRate findApplicableRate(List<PriceRate> priceRates, long hours) {
