@@ -262,7 +262,7 @@ document.getElementById("PaymentForm").addEventListener("submit", function (even
     const expireDate = document.getElementById('expiryDate').value;
     const mail= document.getElementById("email").value;
 
-    console.log(`Name: ${name}\nSurname: ${surname}\nCard Number: ${cardNumber}\nCVV: ${cvv}\nExpire Date: ${expireDate}\nEmail: ${mail}`);
+   // console.log(`Name: ${name}\nSurname: ${surname}\nCard Number: ${cardNumber}\nCVV: ${cvv}\nExpire Date: ${expireDate}\nEmail: ${mail}`);
 
     // const isPaymentValid = validBankingData.some(entry =>
     //     entry.name === name &&
@@ -281,15 +281,18 @@ document.getElementById("PaymentForm").addEventListener("submit", function (even
     //     console.error("Payment failed! Invalid details.");
     //     alert("Payment failed! Please check your details and try again.");
     // }
+
     const  body={
-        totalCost:cost,
+        reservationId:reservationId,
         card: {
             number: cardNumber,
             name: name + ' ' + surname,
             expire: expireDate,
-            cvv: cvv,
+            cvc: cvv,
         }
     }
+    console.log(body)
+
     fetch('http://localhost:8080/api/payment',{
         method:'POST',
         headers:{'Content-Type': 'application/json'},
