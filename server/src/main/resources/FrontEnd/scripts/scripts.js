@@ -262,25 +262,26 @@ document.getElementById("PaymentForm").addEventListener("submit", function (even
     const expireDate = document.getElementById('expiryDate').value;
     const mail= document.getElementById("email").value;
 
-   // console.log(`Name: ${name}\nSurname: ${surname}\nCard Number: ${cardNumber}\nCVV: ${cvv}\nExpire Date: ${expireDate}\nEmail: ${mail}`);
+    {   // console.log(`Name: ${name}\nSurname: ${surname}\nCard Number: ${cardNumber}\nCVV: ${cvv}\nExpire Date: ${expireDate}\nEmail: ${mail}`);
 
-    // const isPaymentValid = validBankingData.some(entry =>
-    //     entry.name === name &&
-    //     entry.surname === surname &&
-    //     entry.cardNumber === cardNumber &&
-    //     entry.cvv === cvv &&
-    //     entry.expireDate === expireDate
-    // );
+        // const isPaymentValid = validBankingData.some(entry =>
+        //     entry.name === name &&
+        //     entry.surname === surname &&
+        //     entry.cardNumber === cardNumber &&
+        //     entry.cvv === cvv &&
+        //     entry.expireDate === expireDate
+        // );
 
-    // if (isPaymentValid) {
-    //     console.log("Payment successful!");
-    //     alert("Payment processed successfully!");
-    //     window.location.href = "html-templates/success-popup.html";
-    //
-    // } else {
-    //     console.error("Payment failed! Invalid details.");
-    //     alert("Payment failed! Please check your details and try again.");
-    // }
+        // if (isPaymentValid) {
+        //     console.log("Payment successful!");
+        //     alert("Payment processed successfully!");
+        //     window.location.href = "html-templates/success-popup.html";
+        //
+        // } else {
+        //     console.error("Payment failed! Invalid details.");
+        //     alert("Payment failed! Please check your details and try again.");
+        // }
+    }
 
     const  body={
         reservationId:reservationId,
