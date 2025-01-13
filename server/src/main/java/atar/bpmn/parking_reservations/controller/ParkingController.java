@@ -1,6 +1,9 @@
 package atar.bpmn.parking_reservations.controller;
 
 import atar.bpmn.parking_reservations.DTO.ParkingWithSpotsResponse;
+import atar.bpmn.parking_reservations.DTO.PaymentBodyTemplate;
+import atar.bpmn.parking_reservations.DTO.ReservationRequest;
+import atar.bpmn.parking_reservations.DTO.ReservationResponse;
 import atar.bpmn.parking_reservations.service.EmailService;
 import atar.bpmn.parking_reservations.service.EmitterService;
 import atar.bpmn.parking_reservations.service.ParkingService;
@@ -11,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping(path = "/api")
