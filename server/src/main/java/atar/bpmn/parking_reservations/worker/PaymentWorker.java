@@ -10,6 +10,9 @@ import atar.bpmn.parking_reservations.model.Card;
 import atar.bpmn.parking_reservations.service.PyamentService;
 
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Map;
 
 @Component
@@ -34,11 +37,13 @@ public class PaymentWorker {
         var jobResultVariables = job.getVariablesAsMap();
         System.out.println("complete_payment");
 
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM").toFormatter(Locale.ENGLISH);
+
         Card cardData = new Card(
             jobResultVariables.get("cardNumber").toString(),
             jobResultVariables.get("cardName").toString(), 
             jobResultVariables.get("cardCvc").toString(), 
-            YearMonth.parse(jobResultVariables.get("cardEzpi").toString()));
+            YearMonth.parse(jobResultVariables.get("cardExpire").toString(), formatter));
 
         if(!pyamentService.validateCardData(null)) {
             sendWorkerError(client, job);
