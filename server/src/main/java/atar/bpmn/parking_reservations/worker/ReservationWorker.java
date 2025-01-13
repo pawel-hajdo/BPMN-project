@@ -121,6 +121,9 @@ public class ReservationWorker {
         var jobResultVariables = job.getVariablesAsMap();
 
         System.out.println("send_ticket");
+        JSONObject eventMessage = new JSONObject();
+        eventMessage.put("success", jobResultVariables.get("access_code").toString());
+        emitterService.sendMessageToListener(String.valueOf(job.getProcessInstanceKey()), eventMessage);
 
         return jobResultVariables;
     }
@@ -131,15 +134,23 @@ public class ReservationWorker {
 
         System.out.println("cancel_reservation");
 
+        Long reservationId = Long.parseLong(jobResultVariables.get("reservationId").toString());
+        
+        reservationService.cancelReservation(reservationId);
         return jobResultVariables;
     }
 
     @JobWorker(type = "finalize_reservation")
     public Map<String, Object> finaleReservation(final JobClient client, final ActivatedJob job) {
         var jobResultVariables = job.getVariablesAsMap();
-
+        
         System.out.println("finalize_reservation");
+        Long reservationId = Long.parseLong(jobResultVariables.get("reservationId").toString());
+        Long paymentId = Long.parseLong(jobResultVariables.get("paymentId").toString());
 
+        String code = reservationService.finalizeReservation(reservationId, paymentId);
+        
+        jobResultVariables.put("accessCode", code);
         return jobResultVariables;
     }
 
@@ -148,6 +159,9 @@ public class ReservationWorker {
         var jobResultVariables = job.getVariablesAsMap();
 
         System.out.println("send_cancellation_message");
+        JSONObject eventMessage = new JSONObject();
+        eventMessage.put("error", "error");
+        emitterService.sendMessageToListener(String.valueOf(job.getProcessInstanceKey()), eventMessage);
 
         return jobResultVariables;
     }

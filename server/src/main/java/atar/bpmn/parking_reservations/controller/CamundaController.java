@@ -69,7 +69,8 @@ public class CamundaController {
         vars.put("cardName", paymentData.card().getName());
         vars.put("cardExpire", paymentData.card().getExpire().toString());
         vars.put("reservationId", paymentData.reservationId());
-        
+        vars.put("mail", paymentData.mail());
+
         client
             .newPublishMessageCommand()
             .messageName(PAYMENT_MESSAGE_ID)
@@ -79,6 +80,6 @@ public class CamundaController {
             .send()
             .join();
         
-        return "OK";
+        return "{\"message\": \"Processing payment\"}";
     }
 }
