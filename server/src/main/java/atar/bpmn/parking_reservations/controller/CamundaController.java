@@ -67,7 +67,7 @@ public class CamundaController {
         vars.put("cardNumber", paymentData.card().getNumber());
         vars.put("cardCvc", paymentData.card().getCvc());
         vars.put("cardName", paymentData.card().getName());
-        vars.put("cardExpire", paymentData.card().getExpire());
+        vars.put("cardExpire", paymentData.card().getExpire().toString());
         vars.put("reservationId", paymentData.reservationId());
         
         client
