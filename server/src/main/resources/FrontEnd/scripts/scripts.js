@@ -202,6 +202,11 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
                             reservationId=data.reservationId;
                             document.getElementById("reservationId").innerHTML=reservationId;
 
+                        }if (data.hasOwnProperty('success')){
+                            window.location.href = "html-templates/success-popup.html";
+                        }if (data.hasOwnProperty('error')){
+                          ///alert("Payment process failed")
+                            window.location.href = "html-templates/fail-popup.html";
                         }
                     } catch (error) {
                         console.error("Error in onmessage handler: ", error);
@@ -305,6 +310,6 @@ document.getElementById("PaymentForm").addEventListener("submit", function (even
         }
         return response.json();
     }).then(response=>{
-        console.log("payment succesfull"+JSON.parse(response))
+        console.log("payment succesfull"+JSON.parse(response.toString()))
     })
 });
