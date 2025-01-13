@@ -4,5 +4,6 @@ import atar.bpmn.parking_reservations.model.Card;
 
 public record PaymentBodyTemplate(
     Card card,
-    Long reservationId
+    Long reservationId,
+    String mail
 ) {}

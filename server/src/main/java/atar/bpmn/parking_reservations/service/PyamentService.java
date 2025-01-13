@@ -13,19 +13,13 @@ import atar.bpmn.parking_reservations.model.Card;
 
 @Service
 public class PyamentService {
-    private Map<Card, Integer> cards;
+    private Map<String, Integer> cards;
 
     public PyamentService() {
         cards = new HashMap<>();
 
-        DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM").toFormatter(Locale.ENGLISH);
-        cards.put(
-            new Card(
-                "1231231231231231",
-                "Piotr Dawid",
-                "123",
-                YearMonth.parse("2025-01", formatter)
-            ), 2137
+        // DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM").toFormatter(Locale.ENGLISH);
+        cards.put("1231231231231231", 21370
         );
     }
 
@@ -34,18 +28,20 @@ public class PyamentService {
     }
 
     public Integer makePayment(Card cardData, Integer payment) throws Exception {
-        Integer money = cards.get(cardData);
+        Integer money = cards.get(cardData.getNumber());
 
+        System.out.println(money + " before");
         if(money == null) {
             throw new Exception("Not enough money");
         }
         money -= payment;
-
+        
+        System.out.println(money + " after");
         if(money < 0) {
             throw new Exception("Not enough money");
         }
 
-        cards.put(cardData, money);
+        cards.put(cardData.getNumber(), money);
         return money;
     }
 }

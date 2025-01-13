@@ -6,12 +6,18 @@ import io.camunda.zeebe.spring.client.annotation.JobWorker;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import com.google.api.client.util.DateTime;
+
 import atar.bpmn.parking_reservations.model.Card;
+import atar.bpmn.parking_reservations.model.Payment;
+import atar.bpmn.parking_reservations.repository.PaymentRepository;
 import atar.bpmn.parking_reservations.service.PyamentService;
 
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -22,13 +28,20 @@ public class PaymentWorker {
     private static final String BANK_ERROR = "BANK_ERROR";
 
     private final PyamentService pyamentService;
+    private final PaymentRepository paymentRepository;
 
     @JobWorker(type = "save_payment")
     public Map<String, Object> savePayment(final JobClient client, final ActivatedJob job) {
         var jobResultVariables = job.getVariablesAsMap();
-
         System.out.println("save_payment");
 
+        Payment payment = new Payment();
+
+        payment.setAmount(Long.parseLong(jobResultVariables.get("totalCost").toString()));
+        payment.setDate(LocalDateTime.parse(jobResultVariables.get("paymentDate").toString()));
+
+        payment = paymentRepository.save(payment);
+        jobResultVariables.put("paymentId", payment.getId());
         return jobResultVariables;
     }
 
@@ -50,16 +63,19 @@ public class PaymentWorker {
             }
             pyamentService.makePayment(cardData, Integer.parseInt(jobResultVariables.get("totalCost").toString()));
         } catch (Exception e) {
+            jobResultVariables.put("error", "Payment failure");
             System.out.println(e.toString());
             sendWorkerError(client, job);
-        }
- 
+        }        
+
+        jobResultVariables.put("paymentDate", LocalDateTime.now().toString());
         return jobResultVariables;
     }
 
     private void sendWorkerError(final JobClient client, ActivatedJob job) {
         client.newThrowErrorCommand(job.getKey())
         .errorCode("BANK_ERROR")
+        .variable("error", "error")
         .send()
         .join();
     }

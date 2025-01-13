@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import atar.bpmn.parking_reservations.service.EmailService;
 import atar.bpmn.parking_reservations.service.EmitterService;
 import atar.bpmn.parking_reservations.service.ReservationService;
 
@@ -22,6 +23,7 @@ public class ReservationWorker {
 
     private final ReservationService reservationService;
     private final EmitterService emitterService;
+    private final EmailService emailService;
 
     @JobWorker(type = "check_for_spot")
     public Map<String, Object> checkForSpot(final JobClient client, final ActivatedJob job) {
@@ -121,6 +123,14 @@ public class ReservationWorker {
         var jobResultVariables = job.getVariablesAsMap();
 
         System.out.println("send_ticket");
+        JSONObject eventMessage = new JSONObject();
+        String accessCode = jobResultVariables.get("accessCode").toString();
+        String email = jobResultVariables.get("mail").toString();
+
+        eventMessage.put("success", accessCode);
+        emitterService.sendMessageToListener(String.valueOf(job.getProcessInstanceKey()), eventMessage);
+
+        emailService.sendReservationSuccessEmail(email, accessCode);
 
         return jobResultVariables;
     }
@@ -131,15 +141,23 @@ public class ReservationWorker {
 
         System.out.println("cancel_reservation");
 
+        Long reservationId = Long.parseLong(jobResultVariables.get("reservationId").toString());
+        
+        reservationService.cancelReservation(reservationId);
         return jobResultVariables;
     }
 
     @JobWorker(type = "finalize_reservation")
     public Map<String, Object> finaleReservation(final JobClient client, final ActivatedJob job) {
         var jobResultVariables = job.getVariablesAsMap();
-
+        
         System.out.println("finalize_reservation");
+        Long reservationId = Long.parseLong(jobResultVariables.get("reservationId").toString());
+        Long paymentId = Long.parseLong(jobResultVariables.get("paymentId").toString());
 
+        String code = reservationService.finalizeReservation(reservationId, paymentId);
+        
+        jobResultVariables.put("accessCode", code);
         return jobResultVariables;
     }
 
@@ -148,6 +166,9 @@ public class ReservationWorker {
         var jobResultVariables = job.getVariablesAsMap();
 
         System.out.println("send_cancellation_message");
+        JSONObject eventMessage = new JSONObject();
+        eventMessage.put("error", "error");
+        emitterService.sendMessageToListener(String.valueOf(job.getProcessInstanceKey()), eventMessage);
 
         return jobResultVariables;
     }
