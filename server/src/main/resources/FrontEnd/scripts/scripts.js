@@ -194,14 +194,23 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
                             }
 
                         }
+                        if (data.hasOwnProperty('totalCost')){
+                          cost=data.totalCost;
+                          document.getElementById("price").innerHTML=cost/100;
+                        }
+                        if (data.hasOwnProperty('reservationId')){
+                            reservationId=data.reservationId;
+                            document.getElementById("reservationId").innerHTML=reservationId;
+
+                        }
                     } catch (error) {
                         console.error("Error in onmessage handler: ", error);
                     }
                 };
-                function SetPayment() {
-                    document.getElementById("price").innerHTML=cost/100;
-                }
-                SetPayment();
+                // function SetPayment() {
+                //     document.getElementById("price").innerHTML=cost/100;
+                // }
+                // SetPayment();
             })
             .catch(error => {
                 console.error('Error during reservation:', error);
@@ -211,12 +220,13 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
     SendReservation(timeS,timeE,matchedSpot.spotID)
 
 });
-document.getElementById("goToPaymentButton").addEventListener("submit", function (event) {
+document.getElementById("goToPaymentButton").addEventListener("click", function (event) {
     event.preventDefault();
     const spotSelectionForm = document.getElementById("SpotSelection");
     const paymentForm = document.getElementById("PaymentSection");
     spotSelectionForm.style.display = "none";
     paymentForm.style.display = "block";
+
 })
 document.getElementById("PaymentForm").addEventListener("submit", function (event) {
     event.preventDefault();
@@ -243,7 +253,7 @@ document.getElementById("PaymentForm").addEventListener("submit", function (even
             expireDate: "2024-12",
         },
     ];
-    console.log('abc test');
+   // console.log('abc test');
 
     const name = document.getElementById('firstName').value;
     const surname = document.getElementById('lastName').value;
@@ -254,21 +264,42 @@ document.getElementById("PaymentForm").addEventListener("submit", function (even
 
     console.log(`Name: ${name}\nSurname: ${surname}\nCard Number: ${cardNumber}\nCVV: ${cvv}\nExpire Date: ${expireDate}\nEmail: ${mail}`);
 
-    const isPaymentValid = validBankingData.some(entry =>
-        entry.name === name &&
-        entry.surname === surname &&
-        entry.cardNumber === cardNumber &&
-        entry.cvv === cvv &&
-        entry.expireDate === expireDate
-    );
+    // const isPaymentValid = validBankingData.some(entry =>
+    //     entry.name === name &&
+    //     entry.surname === surname &&
+    //     entry.cardNumber === cardNumber &&
+    //     entry.cvv === cvv &&
+    //     entry.expireDate === expireDate
+    // );
 
-    if (isPaymentValid) {
-        console.log("Payment successful!");
-        alert("Payment processed successfully!");
-        window.location.href = "html-templates/success-popup.html";
-
-    } else {
-        console.error("Payment failed! Invalid details.");
-        alert("Payment failed! Please check your details and try again.");
+    // if (isPaymentValid) {
+    //     console.log("Payment successful!");
+    //     alert("Payment processed successfully!");
+    //     window.location.href = "html-templates/success-popup.html";
+    //
+    // } else {
+    //     console.error("Payment failed! Invalid details.");
+    //     alert("Payment failed! Please check your details and try again.");
+    // }
+    const  body={
+        totalCost:cost,
+        card: {
+            number: cardNumber,
+            name: name + ' ' + surname,
+            expire: expireDate,
+            cvv: cvv,
+        }
     }
+    fetch('http://localhost:8080/api/payment',{
+        method:'POST',
+        headers:{'Content-Type': 'application/json'},
+        body:body
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('payment failed' + response.statusText);
+        }
+        return response.json();
+    }).then(response=>{
+        console.log("payment succesfull"+response)
+    })
 });

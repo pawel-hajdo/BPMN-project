@@ -17,26 +17,26 @@
         <form id="SpotSelectionForm">
             <!-- Miasto -->
             <div>
-                <label for="city">City:</label>
-                <input list="cityList" id="city" name="city" placeholder="Select a city">
+                <label for="city">Miasto:</label>
+                <input list="cityList" id="city" name="city" placeholder="wybierz miasto">
                 <datalist id="cityList"></datalist>
             </div>
 
             <div>
-                <label for="street">Street:</label>
-                <input list="streetList" id="street" name="street" placeholder="Select a street">
+                <label for="street">Ulica:</label>
+                <input list="streetList" id="street" name="street" placeholder="wybierz ulice">
                 <datalist id="streetList"></datalist>
             </div>
 
             <div>
-                <label for="address">Address:</label>
-                <input list="addressList" id="address" name="address" placeholder="Select an address">
+                <label for="address">Adres:</label>
+                <input list="addressList" id="address" name="address" placeholder="wybierz adres">
                 <datalist id="addressList"></datalist>
             </div>
 
             <div>
-                <label for="parkingSpot">Parking Spot:</label>
-                <input list="parkingSpotList" id="parkingSpot" name="parkingSpot" placeholder="Select a spot">
+                <label for="parkingSpot">Numer miejsca parkingowego:</label>
+                <input list="parkingSpotList" id="parkingSpot" name="parkingSpot" placeholder="wybierz miejsce parkingowe">
                 <datalist id="parkingSpotList"></datalist>
             </div>
 
@@ -45,13 +45,14 @@
 
             <label for="reservationEndInput" id="reservationEnd">Koniec rezerwacji</label>
             <input type="datetime-local" id="reservationEndInput" name="expiryDate" required>
-            <button type="submit" id="submitSpotSelection">Check Availability</button>
-            <button type="submit" id="goToPaymentButton" style="display: none">goToPayment</button>
+            <button type="submit" id="submitSpotSelection">Sprawdź dostępność miejsca</button>
+            <button type="button" id="goToPaymentButton" style="display: none">Przejdź do płatności</button>
         </form>
     </div>
     <div id="PaymentSection" class="formContainer" style="display: none">
         <h2 class="title">Dane Płatności</h2>
-        <h3 id="priceParent">Kwota do zapłaty:<span id="price">0</span>PLN</h3>
+        <h3 id="priceParent">Kwota do zapłaty:<span id="price">test</span>PLN</h3>
+        <h3 id="reservationIdParent">Reservation ID<span id="reservationId">test</span></h3>
         <br>
         <form id="PaymentForm">
             <!-- Imię -->
