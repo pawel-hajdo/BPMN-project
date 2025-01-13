@@ -7,20 +7,21 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import atar.bpmn.parking_reservations.model.Card;
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.stereotype.Service;
+
+import atar.bpmn.parking_reservations.model.Card;
 
 @Service
 public class PyamentService {
     private Map<Card, Integer> cards;
 
     public PyamentService() {
-        cards=new HashMap<>();
+        cards = new HashMap<>();
+
         DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM").toFormatter(Locale.ENGLISH);
         cards.put(
             new Card(
-                "1231231231231231", 
+                "1231231231231231",
                 "Piotr Dawid",
                 "123",
                 YearMonth.parse("2025-01", formatter)

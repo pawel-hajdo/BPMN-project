@@ -153,17 +153,17 @@ document.getElementById("SpotSelectionForm").addEventListener("submit", function
     console.log(timeEConverted+ "end");
 
     function SendReservation(start,stop,SpotID) {
-        const body=JSON.stringify({
+        const body={
             spotId:SpotID,
             startTime:timeS,
             endTime:timeE,
-        })
+        }
         console.log("test formatu"+body)
 
         fetch('http://localhost:8080/api/start',{
             method:'POST',
             headers:{'Content-Type': 'application/json'},
-            body:body
+            body:JSON.stringify(body)
         }).then(response => {
             if (!response.ok) {
                 throw new Error('Failed to make reservation: ' + response.statusText);
@@ -284,6 +284,7 @@ document.getElementById("PaymentForm").addEventListener("submit", function (even
 
     const  body={
         reservationId:reservationId,
+        mail:mail,
         card: {
             number: cardNumber,
             name: name + ' ' + surname,
@@ -296,13 +297,13 @@ document.getElementById("PaymentForm").addEventListener("submit", function (even
     fetch('http://localhost:8080/api/payment',{
         method:'POST',
         headers:{'Content-Type': 'application/json'},
-        body:body
+        body:JSON.stringify(body)
     }).then(response => {
         if (!response.ok) {
             throw new Error('payment failed' + response.statusText);
         }
         return response.json();
     }).then(response=>{
-        console.log("payment succesfull"+response)
+        console.log("payment succesfull"+JSON.parse(response))
     })
 });

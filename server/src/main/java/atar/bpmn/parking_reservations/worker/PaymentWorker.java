@@ -38,20 +38,19 @@ public class PaymentWorker {
         System.out.println("complete_payment");
 
         DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM").toFormatter(Locale.ENGLISH);
-
-        Card cardData = new Card(
-            jobResultVariables.get("cardNumber").toString(),
-            jobResultVariables.get("cardName").toString(), 
-            jobResultVariables.get("cardCvc").toString(), 
-            YearMonth.parse(jobResultVariables.get("cardExpire").toString(), formatter));
-
-        if(!pyamentService.validateCardData(null)) {
-            sendWorkerError(client, job);
-        }
-        
         try {
+            Card cardData = new Card(
+                jobResultVariables.get("cardNumber").toString(),
+                jobResultVariables.get("cardName").toString(), 
+                jobResultVariables.get("cardCvc").toString(), 
+                YearMonth.parse(jobResultVariables.get("cardExpire").toString(), formatter));
+    
+            if(!pyamentService.validateCardData(null)) {
+                sendWorkerError(client, job);
+            }
             pyamentService.makePayment(cardData, Integer.parseInt(jobResultVariables.get("totalCost").toString()));
         } catch (Exception e) {
+            System.out.println(e.toString());
             sendWorkerError(client, job);
         }
  
@@ -60,7 +59,7 @@ public class PaymentWorker {
 
     private void sendWorkerError(final JobClient client, ActivatedJob job) {
         client.newThrowErrorCommand(job.getKey())
-        .errorCode(BANK_ERROR)
+        .errorCode("BANK_ERROR")
         .send()
         .join();
     }
