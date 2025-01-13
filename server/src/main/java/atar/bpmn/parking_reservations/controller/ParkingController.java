@@ -1,8 +1,7 @@
 package atar.bpmn.parking_reservations.controller;
 
 import atar.bpmn.parking_reservations.DTO.ParkingWithSpotsResponse;
-import atar.bpmn.parking_reservations.DTO.ReservationRequest;
-import atar.bpmn.parking_reservations.DTO.ReservationResponse;
+import atar.bpmn.parking_reservations.service.EmailService;
 import atar.bpmn.parking_reservations.service.EmitterService;
 import atar.bpmn.parking_reservations.service.ParkingService;
 import atar.bpmn.parking_reservations.service.ReservationService;
@@ -20,11 +19,13 @@ public class ParkingController {
     private final ParkingService parkingService;
     private final ReservationService reservationService;
     private final EmitterService emitterService;
+    private final EmailService emailService;
 
-    public ParkingController(ParkingService parkingService, ReservationService reservationService, EmitterService emitterService) {
+    public ParkingController(ParkingService parkingService, ReservationService reservationService, EmitterService emitterService, EmailService emailService) {
         this.parkingService = parkingService;
         this.reservationService = reservationService;
         this.emitterService = emitterService;
+        this.emailService = emailService;
     }
 
     @GetMapping("/parkings")
@@ -36,5 +37,11 @@ public class ParkingController {
     @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter subscribe(@RequestParam String processInstanceKey) {
         return emitterService.addListener(processInstanceKey);
+    }
+
+    @PostMapping("/sendReservationRegistered")
+    public String sendReservationRegisteredEmail(@RequestParam String to) {
+        emailService.sendReservationRegisteredEmail(to);
+        return "Reservation registration email sent to: " + to;
     }
 }

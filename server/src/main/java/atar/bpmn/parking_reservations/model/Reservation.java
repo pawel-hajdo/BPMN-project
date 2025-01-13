@@ -17,7 +17,7 @@ public class Reservation {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "spot_id", nullable = false)
     private Spot spot;
 
