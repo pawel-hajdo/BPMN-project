@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rezerwacja Parkingów</title>
+    <link rel="stylesheet" href="styles/spotSelectionPage.css">
+</head>
+<body>
+<nav id="navbar">
+    <p id="logoName">ZaRezerwójParking.pl</p>
+</nav>
+
+<div id="mainContainer">
+    <div id="SpotSelection">
+        <h2 class="title">Wybierz Miejsce Parkingowe</h2>
+        <form id="SpotSelectionForm">
+            <!-- Miasto -->
+            <div>
+                <label for="city">Miasto:</label>
+                <input list="cityList" id="city" name="city" placeholder="wybierz miasto">
+                <datalist id="cityList"></datalist>
+            </div>
+
+            <div>
+                <label for="street">Ulica:</label>
+                <input list="streetList" id="street" name="street" placeholder="wybierz ulice">
+                <datalist id="streetList"></datalist>
+            </div>
+
+            <div>
+                <label for="address">Adres:</label>
+                <input list="addressList" id="address" name="address" placeholder="wybierz adres">
+                <datalist id="addressList"></datalist>
+            </div>
+
+            <div>
+                <label for="parkingSpot">Numer miejsca parkingowego:</label>
+                <input list="parkingSpotList" id="parkingSpot" name="parkingSpot" placeholder="wybierz miejsce parkingowe">
+                <datalist id="parkingSpotList"></datalist>
+            </div>
+
+            <label for="reservationStartInput" id="reservationStart">Początek rezerwacji</label>
+            <input type="datetime-local" id="reservationStartInput" name="expiryDate" required>
+
+            <label for="reservationEndInput" id="reservationEnd">Koniec rezerwacji</label>
+            <input type="datetime-local" id="reservationEndInput" name="expiryDate" required>
+            <button type="submit" id="submitSpotSelection">Sprawdź dostępność miejsca</button>
+            <button type="button" id="goToPaymentButton" style="display: none">Przejdź do płatności</button>
+        </form>
+    </div>
+    <div id="PaymentSection" class="formContainer" style="display: none">
+        <h2 class="title">Dane Płatności</h2>
+        <h3 id="priceParent">Kwota do zapłaty:<span id="price">test</span>PLN</h3>
+        <h3 id="reservationIdParent">Id rezerwacji:<span id="reservationId">test</span></h3>
+        <br>
+        <form id="PaymentForm">
+            <!-- Imię -->
+            <label for="firstName">Imię:</label>
+            <input type="text" id="firstName" name="firstName" placeholder="Podaj swoje imię" required>
+
+            <!-- Nazwisko -->
+            <label for="lastName">Nazwisko:</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Podaj swoje nazwisko" required>
+
+            <!-- Numer karty -->
+            <label for="cardNumber">Numer Karty:</label>
+            <input type="text" id="cardNumber" name="cardNumber" placeholder="0000 0000 0000 0000" required pattern="\d{16}" maxlength="16">
+
+            <!-- CVV -->
+            <label for="cvv">Kod CVV:</label>
+            <input type="text" id="cvv" name="cvv" placeholder="123" required pattern="\d{3}" maxlength="3">
+
+            <!-- Data wygaśnięcia -->
+            <label for="expiryDate">Data Wygaśnięcia:</label>
+            <input type="month" id="expiryDate" name="expiryDate" required>
+
+            <!-- E-mail -->
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" placeholder="Podaj swój e-mail" required>
+
+            <!-- Przyciski -->
+            <div class="buttonContainer">
+                <button type="submit" id="payButton">Zapłać</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="scripts/scripts.js"></script>
+</body>
+
+</html>
